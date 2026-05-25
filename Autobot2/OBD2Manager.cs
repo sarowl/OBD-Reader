@@ -79,7 +79,6 @@ namespace Autobot2
             _port?.Dispose();
         }
 
-        // ── Polling loop ─────────────────────────────────────────
         public void StartPolling(int intervalMs = 250)
         {
             if (_cts != null && !_cts.IsCancellationRequested) return;
@@ -114,7 +113,6 @@ namespace Autobot2
 
         public void StopPolling() => _cts?.Cancel();
 
-        // ── Individual PID pollers ───────────────────────────────
         private async Task PollRpm()
         {
             string raw = await SendCommandAsync("010C");
@@ -171,7 +169,6 @@ namespace Autobot2
                 FuelPressureReceived?.Invoke(bytes[0] * 3.0);
         }
 
-        // ── Serial helpers ───────────────────────────────────────
         private async Task<string> SendCommandAsync(string cmd)
         {
             if (_port == null || !_port.IsOpen) return string.Empty;
