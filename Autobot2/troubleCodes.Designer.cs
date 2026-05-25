@@ -31,8 +31,15 @@
             panel1 = new Panel();
             label1 = new Label();
             pictureBox1 = new PictureBox();
+            dataGridView1 = new DataGridView();
+            colCode = new DataGridViewTextBoxColumn();
+            colDescription = new DataGridViewTextBoxColumn();
+            btnScan = new Button();
+            btcClear = new Button();
+            btnList = new Button();
             panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)dataGridView1).BeginInit();
             SuspendLayout();
             // 
             // panel1
@@ -66,16 +73,77 @@
             pictureBox1.TabIndex = 0;
             pictureBox1.TabStop = false;
             // 
+            // dataGridView1
+            // 
+            dataGridView1.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView1.Columns.AddRange(new DataGridViewColumn[] { colCode, colDescription });
+            dataGridView1.Location = new Point(45, 142);
+            dataGridView1.Name = "dataGridView1";
+            dataGridView1.RowHeadersWidth = 51;
+            dataGridView1.Size = new Size(835, 383);
+            dataGridView1.TabIndex = 1;
+            // 
+            // colCode
+            // 
+            colCode.HeaderText = "Code";
+            colCode.MinimumWidth = 6;
+            colCode.Name = "colCode";
+            colCode.ReadOnly = true;
+            colCode.Width = 80;
+            // 
+            // colDescription
+            // 
+            colDescription.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            colDescription.HeaderText = "Description";
+            colDescription.MinimumWidth = 6;
+            colDescription.Name = "colDescription";
+            colDescription.ReadOnly = true;
+            // 
+            // btnScan
+            // 
+            btnScan.Location = new Point(924, 383);
+            btnScan.Name = "btnScan";
+            btnScan.Size = new Size(94, 29);
+            btnScan.TabIndex = 2;
+            btnScan.Text = "Scan";
+            btnScan.UseVisualStyleBackColor = true;
+            btnScan.Click += BtnScan_Click;
+            // 
+            // btcClear
+            // 
+            btcClear.Location = new Point(924, 442);
+            btcClear.Name = "btcClear";
+            btcClear.Size = new Size(94, 29);
+            btcClear.TabIndex = 3;
+            btcClear.Text = "Clear";
+            btcClear.UseVisualStyleBackColor = true;
+            btcClear.Click += BtnClear_Click;
+            // 
+            // btnList
+            // 
+            btnList.Location = new Point(924, 496);
+            btnList.Name = "btnList";
+            btnList.Size = new Size(94, 29);
+            btnList.TabIndex = 4;
+            btnList.Text = "DTC List";
+            btnList.UseVisualStyleBackColor = true;
+            btnList.Click += btnList_Click;
+            // 
             // troubleCodes
             // 
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
+            Controls.Add(btnList);
+            Controls.Add(btcClear);
+            Controls.Add(btnScan);
+            Controls.Add(dataGridView1);
             Controls.Add(panel1);
             Name = "troubleCodes";
             Size = new Size(1075, 542);
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
+            ((System.ComponentModel.ISupportInitialize)dataGridView1).EndInit();
             ResumeLayout(false);
         }
 
@@ -84,5 +152,11 @@
         private Panel panel1;
         private PictureBox pictureBox1;
         private Label label1;
+        private DataGridView dataGridView1;
+        private DataGridViewTextBoxColumn colCode;
+        private DataGridViewTextBoxColumn colDescription;
+        private Button btnScan;
+        private Button btcClear;
+        private Button btnList;
     }
 }

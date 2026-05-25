@@ -47,7 +47,7 @@
             panel1.Dock = DockStyle.Left;
             panel1.Location = new Point(0, 0);
             panel1.Name = "panel1";
-            panel1.Size = new Size(200, 786);
+            panel1.Size = new Size(200, 630);
             panel1.TabIndex = 0;
             // 
             // btnDiagnosis
@@ -120,7 +120,7 @@
             pnlDisplay.Dock = DockStyle.Fill;
             pnlDisplay.Location = new Point(200, 0);
             pnlDisplay.Name = "pnlDisplay";
-            pnlDisplay.Size = new Size(1285, 786);
+            pnlDisplay.Size = new Size(1082, 630);
             pnlDisplay.TabIndex = 1;
             // 
             // Form1
@@ -128,7 +128,7 @@
             AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.ControlText;
-            ClientSize = new Size(1485, 786);
+            ClientSize = new Size(1282, 630);
             Controls.Add(pnlDisplay);
             Controls.Add(panel1);
             Name = "Form1";
