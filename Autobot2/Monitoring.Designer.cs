@@ -21,9 +21,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            CodeArtEng.Gauge.Themes.ThemeColors themeColors1 = new CodeArtEng.Gauge.Themes.ThemeColors();
-            CodeArtEng.Gauge.Themes.ThemeColors themeColors2 = new CodeArtEng.Gauge.Themes.ThemeColors();
-            CodeArtEng.Gauge.Themes.ThemeColors themeColors3 = new CodeArtEng.Gauge.Themes.ThemeColors();
+            CodeArtEng.Gauge.Themes.ThemeColors themeColors4 = new CodeArtEng.Gauge.Themes.ThemeColors();
+            CodeArtEng.Gauge.Themes.ThemeColors themeColors5 = new CodeArtEng.Gauge.Themes.ThemeColors();
+            CodeArtEng.Gauge.Themes.ThemeColors themeColors6 = new CodeArtEng.Gauge.Themes.ThemeColors();
             panel1 = new Panel();
             label1 = new Label();
             pictureBox1 = new PictureBox();
@@ -71,7 +71,7 @@
             // lblStatus
             // 
             lblStatus.AutoSize = true;
-            lblStatus.Location = new Point(24, 492);
+            lblStatus.Location = new Point(15, 512);
             lblStatus.Name = "lblStatus";
             lblStatus.Size = new Size(49, 20);
             lblStatus.TabIndex = 2;
@@ -106,15 +106,15 @@
             cgRPM.TabIndex = 5;
             cgRPM.Title = "";
             cgRPM.Unit = "RPM";
-            themeColors1.KnobInnerBorderColor = Color.FromArgb(200, 200, 200);
-            themeColors1.KnobTone = Color.FromArgb(200, 200, 200);
-            cgRPM.UserDefinedColors.Base = themeColors1;
-            themeColors2.KnobInnerBorderColor = Color.FromArgb(200, 200, 200);
-            themeColors2.KnobTone = Color.FromArgb(200, 200, 200);
-            cgRPM.UserDefinedColors.Error = themeColors2;
-            themeColors3.KnobInnerBorderColor = Color.FromArgb(200, 200, 200);
-            themeColors3.KnobTone = Color.FromArgb(200, 200, 200);
-            cgRPM.UserDefinedColors.Warning = themeColors3;
+            themeColors4.KnobInnerBorderColor = Color.FromArgb(200, 200, 200);
+            themeColors4.KnobTone = Color.FromArgb(200, 200, 200);
+            cgRPM.UserDefinedColors.Base = themeColors4;
+            themeColors5.KnobInnerBorderColor = Color.FromArgb(200, 200, 200);
+            themeColors5.KnobTone = Color.FromArgb(200, 200, 200);
+            cgRPM.UserDefinedColors.Error = themeColors5;
+            themeColors6.KnobInnerBorderColor = Color.FromArgb(200, 200, 200);
+            themeColors6.KnobTone = Color.FromArgb(200, 200, 200);
+            cgRPM.UserDefinedColors.Warning = themeColors6;
             // 
             // cgSpeed
             // 
