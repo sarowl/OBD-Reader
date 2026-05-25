@@ -8,11 +8,13 @@ namespace Autobot2
     public partial class Monitoring : UserControl
     {
         private bool _isPolling = false;
+        private double _smoothedRpm = 0;
 
         public Monitoring()
         {
             InitializeComponent();
             AppState.ConnectionChanged += OnConnectionChanged;
+            cgRPM.AnimationEnabled = false;
         }
 
         private void OnConnectionChanged()
@@ -85,8 +87,11 @@ namespace Autobot2
         private void OnRpmReceived(int rpm)
         {
             if (this.InvokeRequired) { this.BeginInvoke(() => OnRpmReceived(rpm)); return; }
+            double alpha = 0.3;
+            _smoothedRpm = (alpha * rpm) + (1.0 - alpha) * _smoothedRpm;
+
             lblRpm.Text = $"RPM: {rpm:N0}";
-            cgRPM.Value = rpm;
+            cgRPM.Value = _smoothedRpm;
         }
 
         private void OnSpeedReceived(double speed)

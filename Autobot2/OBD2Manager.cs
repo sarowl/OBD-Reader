@@ -17,6 +17,10 @@ namespace Autobot2
         public event Action<double> SpeedReceived;
         public event Action<double> CoolantTempReceived;
         public event Action<double> ThrottleReceived;
+        public event Action<double> EngineLoadReceived;
+        public event Action<double> IntakeAirTempReceived;
+        public event Action<double> MafReceived;
+        public event Action<double> FuelPressureReceived;
         public event Action<string> RawLogReceived;
         public event Action<string> ErrorOccurred;
 
@@ -25,12 +29,10 @@ namespace Autobot2
         public string ProtocolName { get; private set; }
         public int BaudRate { get; private set; }
 
-
         public bool IsConnected => _port?.IsOpen ?? false;
 
         public async Task<bool> ConnectAsync(string portName, string protocolCommand = "ATSP0", int baudRate = 38400)
         {
-
             PortName = portName;
             ProtocolCommand = protocolCommand;
             ProtocolName = protocolCommand;
@@ -45,13 +47,13 @@ namespace Autobot2
                 };
                 _port.Open();
 
-                await SendCommandAsync("ATZ");      // Reset
+                await SendCommandAsync("ATZ");
                 await Task.Delay(1000);
-                await SendCommandAsync("ATE0");     // Echo off
-                await SendCommandAsync("ATL0");     // Linefeeds off
-                await SendCommandAsync("ATS0");     // Spaces off
-                await SendCommandAsync(protocolCommand);    // Set protocol
-                await SendCommandAsync("ATSH7DF");  // Set header to broadcast address
+                await SendCommandAsync("ATE0");
+                await SendCommandAsync("ATL0");
+                await SendCommandAsync("ATS0");
+                await SendCommandAsync(protocolCommand);
+                await SendCommandAsync("ATSH7DF");
 
                 string resp = await SendCommandAsync("0100");
                 if (resp.Contains("UNABLE") || resp.Contains("ERROR") || resp.Contains("NO DATA"))
@@ -77,7 +79,7 @@ namespace Autobot2
             _port?.Dispose();
         }
 
-        // ── Start polling loop ───────────────────────────────────
+        // ── Polling loop ─────────────────────────────────────────
         public void StartPolling(int intervalMs = 250)
         {
             if (_cts != null && !_cts.IsCancellationRequested) return;
@@ -94,6 +96,10 @@ namespace Autobot2
                         await PollSpeed();
                         await PollCoolantTemp();
                         await PollThrottle();
+                        await PollEngineLoad();
+                        await PollIntakeAirTemp();
+                        await PollMaf();
+                        await PollFuelPressure();
                         await Task.Delay(intervalMs, token);
                     }
                     catch (OperationCanceledException) { break; }
@@ -113,10 +119,7 @@ namespace Autobot2
         {
             string raw = await SendCommandAsync("010C");
             if (TryParseResponse(raw, "0C", out byte[] bytes) && bytes.Length >= 2)
-            {
-                int rpm = ((bytes[0] * 256) + bytes[1]) / 4;
-                RpmReceived?.Invoke(rpm);
-            }
+                RpmReceived?.Invoke(((bytes[0] * 256) + bytes[1]) / 4);
         }
 
         private async Task PollSpeed()
@@ -140,6 +143,34 @@ namespace Autobot2
                 ThrottleReceived?.Invoke(bytes[0] * 100.0 / 255.0);
         }
 
+        private async Task PollEngineLoad()
+        {
+            string raw = await SendCommandAsync("0104");
+            if (TryParseResponse(raw, "04", out byte[] bytes) && bytes.Length >= 1)
+                EngineLoadReceived?.Invoke(bytes[0] * 100.0 / 255.0);
+        }
+
+        private async Task PollIntakeAirTemp()
+        {
+            string raw = await SendCommandAsync("010F");
+            if (TryParseResponse(raw, "0F", out byte[] bytes) && bytes.Length >= 1)
+                IntakeAirTempReceived?.Invoke(bytes[0] - 40.0);
+        }
+
+        private async Task PollMaf()
+        {
+            string raw = await SendCommandAsync("0110");
+            if (TryParseResponse(raw, "10", out byte[] bytes) && bytes.Length >= 2)
+                MafReceived?.Invoke(((bytes[0] * 256) + bytes[1]) / 100.0);
+        }
+
+        private async Task PollFuelPressure()
+        {
+            string raw = await SendCommandAsync("010A");
+            if (TryParseResponse(raw, "0A", out byte[] bytes) && bytes.Length >= 1)
+                FuelPressureReceived?.Invoke(bytes[0] * 3.0);
+        }
+
         // ── Serial helpers ───────────────────────────────────────
         private async Task<string> SendCommandAsync(string cmd)
         {
@@ -148,7 +179,7 @@ namespace Autobot2
             _port.DiscardInBuffer();
             _port.WriteLine(cmd);
 
-            await Task.Delay(100); // Give ECU time to respond
+            await Task.Delay(100);
 
             string response = string.Empty;
             var deadline = DateTime.Now.AddMilliseconds(1500);
@@ -157,7 +188,7 @@ namespace Autobot2
                 if (_port.BytesToRead > 0)
                 {
                     response += _port.ReadExisting();
-                    if (response.Contains(">")) break; // ELM327 prompt = done
+                    if (response.Contains(">")) break;
                 }
                 await Task.Delay(20);
             }
@@ -173,7 +204,6 @@ namespace Autobot2
 
             raw = raw.Replace(">", "").Replace("\r", "").Replace("\n", "").Replace(" ", "").Trim().ToUpper();
 
-            // e.g. for pid="0C", look for "410C"
             string expected = "41" + pid.ToUpper();
             int idx = raw.IndexOf(expected, StringComparison.OrdinalIgnoreCase);
             if (idx < 0) return false;
@@ -196,4 +226,3 @@ namespace Autobot2
         public void Dispose() => Disconnect();
     }
 }
-
